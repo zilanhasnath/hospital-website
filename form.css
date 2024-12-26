@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(184, 169, 247); /* Changed background color to pink */
+    margin: 0;
+    padding: 50px;
+}
+
+h2 {
+    color: #f5fafa;
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 45px;
+    text-shadow: 2px 2px #6ebdc7;
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 20px 15px 8px rgba(0, 0, 0, 0.1);
+}
+
+form input[type="text"], form select {
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    margin: 8px 0;
+    border: 1px solid #9233ff;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #555;
+}
