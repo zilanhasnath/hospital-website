@@ -46,49 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])) {
     $newEmail = $_POST['email'];
     $newContact = $_POST['contact'];
 
-    // Handle image upload
-    $image = $_FILES['image']['name'];
-    $imageTmpName = $_FILES['image']['tmp_name'];
-    $imageSize = $_FILES['image']['size'];
-    $imageError = $_FILES['image']['error'];
-
-    // Set the image upload directory
-    $uploadDir = 'uploads/';
-    
-    // Check if upload directory exists, create if not
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
-
-    // Image file type validation (only allow jpg, jpeg, png)
-    $allowedExtensions = ['jpg', 'jpeg', 'png'];
-    $fileExtension = strtolower(pathinfo($image, PATHINFO_EXTENSION));
-    if (!in_array($fileExtension, $allowedExtensions)) {
-        echo "Only JPG, JPEG, and PNG files are allowed.";
-        exit();
-    }
-
-    // Set a limit for file size (e.g., 1MB)
-    if ($imageSize > 1000000) {
-        echo "File size is too large. Please upload a file smaller than 1MB.";
-        exit();
-    }
-
-    // Handle no file uploaded case
-    if ($imageError == 0) {
-        // Generate a unique file name to avoid overwriting
-        $newImageName = uniqid('', true) . '.' . $fileExtension;
-        $imagePath = $uploadDir . $newImageName;
-
-        if (move_uploaded_file($imageTmpName, $imagePath)) {
-            echo "File uploaded successfully!";
-        } else {
-            echo "Error uploading the file.";
-            exit();
-        }
-    }
-
-    // Update query to edit the user data with the new image (or previous image if no new image uploaded)
+    // Update query to edit the user data
     $editQuery = "UPDATE `patientlist` SET 
         `username` = '$newUsername', 
         `password` = '$newPassword',
@@ -96,8 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit'])) {
         `disease` = '$newDisease', 
         `checkuptime` = '$newCheckupTime',
         `email` = '$newEmail',
-        `contact` = '$newContact',
-        `image` = '$imagePath'  -- Save image path to database
+        `contact` = '$newContact'
         WHERE `username` = '$user'";
 
     if (mysqli_query($con, $editQuery)) {
@@ -134,6 +91,7 @@ mysqli_close($con);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css"> <!-- Link to your CSS file -->
 </head>
 <body>
     <h2>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
@@ -168,14 +126,10 @@ mysqli_close($con);
             <th>Contact</th>
             <td><?php echo $row['contact']; ?></td>
         </tr>
-        <tr>
-            <th>Profile Picture</th>
-            <td><img src="<?php echo $row['image']; ?>" alt="Profile Picture" width="100"></td>
-        </tr>
     </table>
 
     <h3>Edit My Data</h3>
-    <form action="dashboard.php" method="POST" enctype="multipart/form-data">
+    <form action="dashboard.php" method="POST">
         <label for="username">New Username:</label>
         <input type="text" id="username" name="username" value="<?php echo $row['username']; ?>" required><br><br>
 
@@ -209,9 +163,6 @@ mysqli_close($con);
 
         <label for="contact">New Contact Number:</label>
         <input type="tel" id="contact" name="contact" pattern="[0-9]{10}" value="<?php echo $row['contact']; ?>" required><br><br>
-
-        <label for="image">Upload Profile Picture:</label>
-        <input type="file" id="image" name="image"><br><br>
 
         <input type="submit" name="edit" value="Update My Data">
     </form>
